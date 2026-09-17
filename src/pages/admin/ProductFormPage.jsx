@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import AdminLayout from '../../components/admin/AdminLayout';
 import ImageUploader from '../../components/admin/ImageUploader';
 import { api } from '../../lib/api';
+import { formatPrice, parsePrice } from '../../lib/format';
 
 export default function ProductFormPage() {
   const { id } = useParams();
@@ -10,7 +11,7 @@ export default function ProductFormPage() {
   const navigate = useNavigate();
 
   const [title, setTitle] = useState('');
-  const [price, setPrice] = useState('');
+  const [price, setPrice] = useState('');          // raw digits only, e.g. "12500000"
   const [imageUrl, setImageUrl] = useState('');
   const [loading, setLoading] = useState(isEdit);
   const [saving, setSaving] = useState(false);
@@ -22,19 +23,29 @@ export default function ProductFormPage() {
       .then((res) => {
         const p = res.data;
         setTitle(p.title);
-        setPrice(p.price);
+        setPrice(parsePrice(p.price));   // "۱۲,۵۰۰,۰۰۰ تومان" → "12500000"
         setImageUrl(p.imageUrl || '');
       })
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
   }, [id, isEdit]);
 
+  function handlePriceChange(e) {
+    // Allow only digits (Western or Persian), strip everything else
+    const raw = parsePrice(e.target.value);
+    setPrice(raw);
+  }
+
   async function handleSubmit(e) {
     e.preventDefault();
     setError('');
     setSaving(true);
     try {
-      const payload = { title, price, imageUrl: imageUrl || null };
+      const payload = {
+        title,
+        price: formatPrice(price),       // "۱۲,۵۰۰,۰۰۰ تومان"
+        imageUrl: imageUrl || null,
+      };
       if (isEdit) {
         await api.updateProduct(id, payload);
       } else {
@@ -79,15 +90,24 @@ export default function ProductFormPage() {
           </label>
 
           <label className="block">
-            <span className="block text-sm text-gray-700 mb-1">قیمت</span>
+            <span className="block text-sm text-gray-700 mb-1">
+              قیمت (فقط عدد — مثلاً 12500000)
+            </span>
             <input
               type="text"
+              inputMode="numeric"
               value={price}
-              onChange={(e) => setPrice(e.target.value)}
+              onChange={handlePriceChange}
               required
-              placeholder="مثال: ۱۲,۵۰۰,۰۰۰ تومان"
+              placeholder="12500000"
               className="w-full px-3 py-2 rounded-lg border border-gray-200 focus:border-[#486E3F] focus:outline-none text-gray-800"
+              dir="ltr"
             />
+            {price && (
+              <p className="mt-1 text-sm text-gray-500">
+                پیش‌نمایش: <span className="text-[#486E3F] font-bold">{formatPrice(price)}</span>
+              </p>
+            )}
           </label>
 
           <ImageUploader value={imageUrl} onChange={setImageUrl} />

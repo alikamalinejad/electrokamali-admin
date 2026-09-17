@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { api } from '../../lib/api';
+import { formatPrice } from '../../lib/format';
 
 export default function ProductTable({ products, onDeleted }) {
   async function handleDelete(product) {
@@ -49,7 +50,9 @@ export default function ProductTable({ products, onDeleted }) {
                 )}
               </td>
               <td className="px-4 py-3 text-gray-800 font-medium">{p.title}</td>
-              <td className="px-4 py-3 text-[#486E3F] font-bold">{p.price}</td>
+              <td className="px-4 py-3 text-[#486E3F] font-bold">
+                {formatPrice(p.price)}
+              </td>
               <td className="px-4 py-3">
                 <div className="flex gap-2">
                   <Link
