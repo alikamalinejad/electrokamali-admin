@@ -29,14 +29,16 @@ export default function ImageUploader({ value, onChange }) {
 
   return (
     <div>
-      <label className="block text-sm text-gray-700 mb-2">تصویر محصول</label>
+      <label className="block text-sm text-gray-700 dark:text-gray-300 mb-2">
+        تصویر محصول
+      </label>
 
       {value ? (
         <div className="relative inline-block">
           <img
             src={api.imageUrl(value)}
             alt="پیش‌نمایش"
-            className="w-40 h-40 rounded-lg object-cover border border-gray-200"
+            className="w-40 h-40 rounded-lg object-cover border border-gray-200 dark:border-gray-600"
           />
           <button
             type="button"
@@ -48,7 +50,7 @@ export default function ImageUploader({ value, onChange }) {
           </button>
         </div>
       ) : (
-        <div className="w-40 h-40 rounded-lg border-2 border-dashed border-gray-200 flex items-center justify-center text-gray-400 text-sm">
+        <div className="w-40 h-40 rounded-lg border-2 border-dashed border-gray-200 dark:border-gray-600 flex items-center justify-center text-gray-500 dark:text-gray-500 text-sm">
           {uploading ? 'در حال آپلود...' : 'بدون تصویر'}
         </div>
       )}
@@ -66,7 +68,7 @@ export default function ImageUploader({ value, onChange }) {
           type="button"
           onClick={() => inputRef.current?.click()}
           disabled={uploading}
-          className="px-4 py-2 rounded-lg border border-gray-200 text-gray-700 text-sm hover:bg-gray-50 disabled:opacity-50"
+          className="px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300 text-sm hover:bg-surface-muted dark:hover:bg-gray-700 disabled:opacity-50"
         >
           {uploading ? 'لطفا صبر کنید...' : value ? 'تغییر تصویر' : 'انتخاب تصویر'}
         </button>

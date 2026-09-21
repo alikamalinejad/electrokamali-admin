@@ -23,7 +23,9 @@ export default function DashboardPage() {
   return (
     <AdminLayout>
       <div className="flex items-center justify-between mb-8">
-        <h1 className="text-2xl font-extrabold text-gray-900">مدیریت محصولات</h1>
+        <h1 className="text-2xl font-extrabold text-gray-900 dark:text-white">
+          مدیریت محصولات
+        </h1>
         <Link
           to="/admin/products/new"
           className="px-4 py-2 rounded-lg bg-[#486E3F] text-white font-bold hover:bg-[#3d5c36] transition-colors"
@@ -32,7 +34,7 @@ export default function DashboardPage() {
         </Link>
       </div>
 
-      {loading && <p className="text-gray-400">در حال بارگذاری...</p>}
+      {loading && <p className="text-gray-500 dark:text-gray-500">در حال بارگذاری...</p>}
       {error && <p className="text-red-500">خطا: {error}</p>}
       {!loading && !error && (
         <ProductTable products={products} onDeleted={handleDeleted} />
